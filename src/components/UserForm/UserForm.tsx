@@ -1,13 +1,7 @@
-import {
-  FieldApi,
-  FieldApiOptions,
-  formOptions,
-  useForm,
-  useStore,
-  type Field,
-} from "@tanstack/react-form";
+import { formOptions, useForm } from "@tanstack/react-form";
 import { InputField } from "../InputField/InputField";
 import { z } from "zod";
+import { User } from "../UserCard/UserCard";
 
 const addressSchema = z.object({
   street: z.string(),
@@ -28,14 +22,18 @@ const userSchema = z.object({
 
 export type UserFormFields = z.infer<typeof userSchema>;
 
-export function UserForm() {
+interface UserFormProps {
+  user?: User;
+}
+
+export function UserForm({ user }: UserFormProps) {
   const defaultUser: UserFormFields = {
-    firstName: "",
-    lastName: "",
-    username: "",
-    password: "",
-    email: "",
-    phoneNumber: "",
+    firstName: user?.firstName ?? "",
+    lastName: user?.lastName ?? "",
+    username: user?.username ?? "",
+    password: user?.password ?? "",
+    email: user?.email ?? "",
+    phoneNumber: user?.phoneNumber ?? "",
     //addresses: [],
   };
 
@@ -46,11 +44,11 @@ export function UserForm() {
     },
     onSubmit: async ({ value }) => {
       // Do something with form data
-      console.log(value);
     },
   });
 
   const form = useForm(formOpts);
+  const isEditing = !!user;
 
   const getFieldError = (field) => {
     const { isTouched, errors } = field.state.meta;
@@ -68,6 +66,7 @@ export function UserForm() {
         form.handleSubmit();
       }}
     >
+      <p className="col-span-2">{isEditing ? "EDITING ..." : "CREATING ..."}</p>
       <form.Field name="firstName">
         {(field) => (
           <InputField

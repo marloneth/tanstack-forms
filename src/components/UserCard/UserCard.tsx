@@ -6,11 +6,15 @@ export interface User extends UserFormFields {
 
 interface UserCardProps {
   user: User;
+  onClick: () => void;
 }
 
-export function UserCard({ user }: UserCardProps) {
+export function UserCard({ user, onClick }: UserCardProps) {
   return (
-    <div className="flex flex-col gap-2 border rounded-md p-4 cursor-pointer">
+    <div
+      className="flex flex-col gap-2 border rounded-md p-4 cursor-pointer"
+      onClick={onClick}
+    >
       <p>
         <strong>Full Name: </strong> {user.firstName} {user.lastName}
       </p>
